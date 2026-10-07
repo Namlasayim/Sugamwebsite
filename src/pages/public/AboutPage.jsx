@@ -5,6 +5,21 @@ import '../../styles/AboutPage.css'
 
 export default function AboutPage() {
   const { settings, loading } = useSiteContent()
+  const socialLinks = [settings.instagram_url, settings.youtube_url, settings.tiktok_url].filter(Boolean)
+  const jsonLd = [{
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: settings.artist_name || 'Sugam Tamang',
+    jobTitle: 'Artist',
+    nationality: 'Nepali',
+    sameAs: socialLinks,
+  }, {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'SugamArtz',
+    url: 'https://sugamartz.com/',
+    description: 'Contemporary paintings and artist profile by Sugam Tamang.',
+  }]
 
   useEffect(() => {
     if (loading) return undefined
@@ -21,11 +36,15 @@ export default function AboutPage() {
 
   return <>
     <SEO
-      title="About Sugam Tamang | SugamArtz"
-      description="Learn about Sugam Tamang, a Nepali artist creating contemporary paintings shaped by memory, light, and the landscape of Nepal."
+      title="About Sugam Tamang | Nepali Contemporary Artist | SugamArtz"
+      description="Sugam Tamang is a Nepali contemporary artist exploring memory, landscape, and color through original paintings and slow, intentional work."
       canonical="/about"
-      ogImage="/og-image.svg"
+      ogImage="/og-image.jpg"
       ogType="profile"
+      ogImageAlt="Sugam Tamang portrait and artwork preview"
+      ogTitle="About Sugam Tamang | Nepali Contemporary Artist | SugamArtz"
+      ogDescription="Sugam Tamang is a Nepali contemporary artist exploring memory, landscape, and color through original paintings and slow, intentional work."
+      jsonLd={jsonLd}
     />
     <section className="statement-section about-page reveal-on-scroll page-entrance page-entrance--content">
     <div className="about-page__body">

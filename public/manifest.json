@@ -1,0 +1,22 @@
+{
+  "name": "SugamArtz",
+  "short_name": "SugamArtz",
+  "theme_color": "#29221d",
+  "background_color": "#29221d",
+  "display": "standalone",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/website-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

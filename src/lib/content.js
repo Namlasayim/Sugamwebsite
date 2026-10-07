@@ -1,6 +1,5 @@
-import { supabase } from './supabaseClient'
-
-function requireSupabase() {
+async function requireSupabase() {
+  const { supabase } = await import('./supabaseClient')
   if (!supabase) throw new Error('Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
   return supabase
 }
@@ -17,13 +16,14 @@ function createUploadId() {
 }
 
 export async function getCurrentSession() {
-  const { data, error } = await requireSupabase().auth.getSession()
+  const client = await requireSupabase()
+  const { data, error } = await client.auth.getSession()
   if (error) throw error
   return data.session
 }
 
 export async function fetchSiteContent() {
-  const client = requireSupabase()
+  const client = await requireSupabase()
   const [{ data: settings, error: settingsError }, { data: artistIntro, error: introError }, { data: paintings, error: paintingsError }] = await Promise.all([
     client.from('settings').select('*').eq('id', 1).maybeSingle(),
     client.from('artist_intro').select('*').eq('id', 1).maybeSingle(),
@@ -36,17 +36,19 @@ export async function fetchSiteContent() {
 }
 
 export async function saveSettings(values) {
-  const { error } = await requireSupabase().from('settings').upsert({ id: 1, ...values }, { onConflict: 'id' })
+  const client = await requireSupabase()
+  const { error } = await client.from('settings').upsert({ id: 1, ...values }, { onConflict: 'id' })
   if (error) throw error
 }
 
 export async function saveArtistIntro(values) {
-  const { error } = await requireSupabase().from('artist_intro').upsert({ id: 1, ...values }, { onConflict: 'id' })
+  const client = await requireSupabase()
+  const { error } = await client.from('artist_intro').upsert({ id: 1, ...values }, { onConflict: 'id' })
   if (error) throw error
 }
 
 export async function uploadPaintingImage(file) {
-  const client = requireSupabase()
+  const client = await requireSupabase()
   const path = `${createUploadId()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '-')}`
   const { error } = await client.storage.from('paintings').upload(path, file, { upsert: false })
   if (error) throw error
@@ -54,7 +56,7 @@ export async function uploadPaintingImage(file) {
 }
 
 export async function uploadWebsiteIcon(file) {
-  const client = requireSupabase()
+  const client = await requireSupabase()
   const path = `site-icons/${createUploadId()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '-')}`
   const { error } = await client.storage.from('site-assets').upload(path, file, { upsert: false })
   if (error) throw error
@@ -62,7 +64,7 @@ export async function uploadWebsiteIcon(file) {
 }
 
 export async function savePainting(values, imageFile, currentImageUrl) {
-  const client = requireSupabase()
+  const client = await requireSupabase()
   let imageUrl = currentImageUrl || null
   let imagePath = null
   if (imageFile) ({ url: imageUrl, path: imagePath } = await uploadPaintingImage(imageFile))
@@ -76,7 +78,7 @@ export async function savePainting(values, imageFile, currentImageUrl) {
 }
 
 export async function deletePainting(painting) {
-  const client = requireSupabase()
+  const client = await requireSupabase()
   const { error } = await client.from('paintings').delete().eq('id', painting.id)
   if (error) throw error
   if (painting.image_url) {
@@ -86,10 +88,12 @@ export async function deletePainting(painting) {
 }
 
 export async function signIn(email, password) {
-  const { error } = await requireSupabase().auth.signInWithPassword({ email, password })
+  const client = await requireSupabase()
+  const { error } = await client.auth.signInWithPassword({ email, password })
   if (error) throw error
 }
 
 export async function signOut() {
-  await requireSupabase()?.auth.signOut()
+  const client = await requireSupabase()
+  await client.auth.signOut()
 }

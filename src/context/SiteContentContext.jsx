@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { fetchSiteContent } from '../lib/content'
 import { preloadImages } from '../lib/imageCache'
+import { paintingThumb } from '../lib/imageUrl'
 import { SiteContentContext } from './SiteContent'
 
 const fallbackSettings = {
@@ -74,11 +75,13 @@ export function SiteContentProvider({ children }) {
     setError('')
     try {
       const nextContent = normalizeContent(await fetchSiteContent())
-      await preloadImages([
+      const priorityImages = [
         nextContent.settings.profile_photo_url,
         nextContent.artistIntro.image_url,
-        ...nextContent.paintings.map((painting) => painting.image_url),
-      ])
+        ...nextContent.paintings.slice(0, 4).map((painting) => paintingThumb(painting.id, painting.image_url)),
+      ].filter(Boolean)
+
+      await preloadImages(priorityImages, 'high')
       setSettings(nextContent.settings)
       setArtistIntro(nextContent.artistIntro)
       setPaintings(shuffleAvailable(nextContent.paintings))

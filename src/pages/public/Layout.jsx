@@ -64,6 +64,8 @@ export default function Layout() {
   const { pathname } = useLocation()
 
   useEffect(() => {
+    document.documentElement.classList.add('js-enabled')
+
     const elements = document.querySelectorAll('.page-reveal')
     if (!elements.length) return undefined
     const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {

@@ -1,0 +1,5 @@
+/robots.txt /robots.txt 200
+/sitemap.xml /sitemap.xml 200
+/manifest.json /manifest.json 200
+/404 /404.html 404
+/* /index.html 200
