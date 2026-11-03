@@ -1,5 +1,6 @@
+import { supabase } from './supabaseClient'
+
 async function requireSupabase() {
-  const { supabase } = await import('./supabaseClient')
   if (!supabase) throw new Error('Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
   return supabase
 }

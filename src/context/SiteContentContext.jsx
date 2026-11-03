@@ -81,7 +81,9 @@ export function SiteContentProvider({ children }) {
         ...nextContent.paintings.slice(0, 4).map((painting) => paintingThumb(painting.id, painting.image_url)),
       ].filter(Boolean)
 
-      await preloadImages(priorityImages, 'high')
+      if (!window.__PRERENDER_INJECTED) {
+        await preloadImages(priorityImages, 'high')
+      }
       setSettings(nextContent.settings)
       setArtistIntro(nextContent.artistIntro)
       setPaintings(shuffleAvailable(nextContent.paintings))
@@ -106,4 +108,3 @@ export function SiteContentProvider({ children }) {
     {children}
   </SiteContentContext.Provider>
 }
-

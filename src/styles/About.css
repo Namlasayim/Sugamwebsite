@@ -786,11 +786,11 @@ h2 {
     color: var(--soft);
 }
 
-.contact-section h2 {
+.contact-section h1 {
     font-size: clamp(60px, 8vw, 110px);
 }
 
-.contact-section h2 em {
+.contact-section h1 em {
     color: var(--ink);
 }
 

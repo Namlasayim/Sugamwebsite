@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/generate-sitemap.mjs && vite build",
+    "build": "node scripts/generate-sitemap.mjs && vite build && node scripts/verify-prerender.mjs",
+    "deploy:cloudflare": "npm run build && wrangler pages deploy dist --project-name \"${CLOUDFLARE_PAGES_PROJECT:?Set CLOUDFLARE_PAGES_PROJECT to your Cloudflare Pages project name}\"",
     "lint": "oxlint",
     "preview": "vite preview"
   },
@@ -22,7 +23,15 @@
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.1.0",
     "oxlint": "^1.79.0",
+    "puppeteer": "^25.16.0",
     "sharp": "^0.34.3",
-    "vite": "^8.2.2"
+    "vite": "^8.2.2",
+    "vite-plugin-prerender": "^1.0.8",
+    "wrangler": "^4.157.0"
+  },
+  "overrides": {
+    "@prerenderer/renderer-puppeteer": {
+      "puppeteer": "^25.16.0"
+    }
   }
 }

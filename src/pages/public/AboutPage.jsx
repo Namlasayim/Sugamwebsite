@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useSiteContent } from '../../context/useSiteContent'
-import SEO from '../../components/SEO'
+import Seo from '../../components/Seo'
 import '../../styles/AboutPage.css'
 
 export default function AboutPage() {
@@ -35,15 +35,13 @@ export default function AboutPage() {
   }, [loading])
 
   return <>
-    <SEO
-      title="About Sugam Tamang | Nepali Contemporary Artist | SugamArtz"
+    <Seo
+      title="About Sugam Tamang — Contemporary Nepali Artist | SugamArtz"
       description="Sugam Tamang is a Nepali contemporary artist exploring memory, landscape, and color through original paintings and slow, intentional work."
-      canonical="/about"
-      ogImage="/og-image.jpg"
-      ogType="profile"
-      ogImageAlt="Sugam Tamang portrait and artwork preview"
-      ogTitle="About Sugam Tamang | Nepali Contemporary Artist | SugamArtz"
-      ogDescription="Sugam Tamang is a Nepali contemporary artist exploring memory, landscape, and color through original paintings and slow, intentional work."
+      path="/about"
+      image="/og-image.jpg"
+      type="profile"
+      ready={!loading}
       jsonLd={jsonLd}
     />
     <section className="statement-section about-page reveal-on-scroll page-entrance page-entrance--content">
@@ -51,7 +49,7 @@ export default function AboutPage() {
       <div className="about-page__portrait-wrap">
         <span className="about-page__portrait-label">PORTRAIT / 01</span>
         <div className="profile-photo">
-          {settings.profile_photo_url ? <img src={settings.profile_photo_url} alt={`${settings.artist_name || 'Sugam Tamang'} portrait by the artist`} loading="lazy" decoding="async" width="800" height="1000" /> : <span>PROFILE PHOTO COMING SOON</span>}
+          {settings.profile_photo_url ? <img src={settings.profile_photo_url} alt={`${settings.artist_name || 'Sugam Tamang'} portrait by the artist`} loading="eager" decoding="async" width="800" height="1000" /> : <span>PROFILE PHOTO COMING SOON</span>}
         </div>
       </div>
       <div className="about-page__intro">

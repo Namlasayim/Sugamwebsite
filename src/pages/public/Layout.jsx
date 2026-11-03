@@ -64,7 +64,9 @@ export default function Layout() {
   const { pathname } = useLocation()
 
   useEffect(() => {
-    document.documentElement.classList.add('js-enabled')
+    if (!window.__PRERENDER_INJECTED) {
+      document.documentElement.classList.add('js-enabled')
+    }
 
     const elements = document.querySelectorAll('.page-reveal')
     if (!elements.length) return undefined

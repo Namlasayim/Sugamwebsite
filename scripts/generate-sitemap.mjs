@@ -29,8 +29,14 @@ function parseEnvFile(filePath) {
   }
 }
 
-function isUsablePublicUrl(url) {
-  return typeof url === 'string' && /^https?:\/\//i.test(url) && !/[?&]painting=|[?&]token=|\/storage\/v1\/object\/sign\//i.test(url)
+function slugify(value) {
+  return String(value || '')
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
 }
 
 async function main() {
@@ -48,24 +54,15 @@ async function main() {
   if (supabaseUrl && supabaseKey) {
     try {
       const client = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false } })
-      const { data: paintings, error } = await client.from('paintings').select('id, status, public_url, slug, title').order('display_order', { ascending: true })
+      const { data: paintings, error } = await client.from('paintings').select('id, title').order('display_order', { ascending: true })
 
       if (error) {
         throw error
       }
 
       for (const painting of paintings || []) {
-        const publicUrl = painting.public_url || null
-        const pageUrl = isUsablePublicUrl(publicUrl) ? publicUrl : null
-
-        if (pageUrl) {
-          urls.push({ loc: pageUrl, priority: '0.8', changefreq: 'monthly' })
-        } else {
-          const hasQueryStringOnly = typeof painting.public_url === 'string' && /\?painting=|\?/.test(painting.public_url)
-          if (hasQueryStringOnly || !publicUrl) {
-            console.warn(`Skipping painting ${painting.id}: only query-string or non-public URLs are available, which are not suitable for the sitemap.`)
-          }
-        }
+        const slug = slugify(painting.title)
+        if (slug) urls.push({ loc: `https://sugamartz.com/gallery/${slug}`, priority: '0.8', changefreq: 'monthly' })
       }
     } catch (error) {
       console.warn('Sitemap extension skipped because the Supabase table could not be queried:', error.message || error)
