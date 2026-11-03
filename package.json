@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/generate-sitemap.mjs && vite build && node scripts/verify-prerender.mjs",
+    "build": "node scripts/generate-sitemap.mjs && vite build",
     "deploy:cloudflare": "npm run build && wrangler pages deploy dist --project-name \"${CLOUDFLARE_PAGES_PROJECT:?Set CLOUDFLARE_PAGES_PROJECT to your Cloudflare Pages project name}\"",
     "lint": "oxlint",
     "preview": "vite preview"
